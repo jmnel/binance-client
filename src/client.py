@@ -90,12 +90,14 @@ def proc(worker_idx: int, child_conn: Connection):
                 wave, symbol, from_id = msg.args
 #                print(f'w={wave}, s={symbol}, idx={from_id}')
 
+                t_start = perf_counter()
                 try:
                     result = get_aggregate_trades(symbol, from_id)
                 except:
-                    print(f'failed')
-                    sleep(5)
+                    print(f'{worker_idx} : Request timed out.')
+                    sleep(2)
                     continue
+                print(f'requst took {perf_counter() - t_start}')
 
                 if result.status == 200:
                     true_weight = result.used_weight
@@ -219,11 +221,12 @@ def main():
                 t_0 = t_1
                 weight = max(0, weight - settings.WEIGHT_DECAY * t_d)
 #                print(f'new weight: {weight}')
-                sleep(0.1)
+#                sleep(0.002)
 
             wave += 1
             for i in range(N):
                 parent_conn[i].send(Message(MessageType.AGG_TRADES_REQUEST, (wave, 'BTCUSDT', next_idx)))
+                sleep(1)
                 next_idx += 1002
                 busy[i] = True
 

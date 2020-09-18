@@ -30,7 +30,7 @@ def get_aggregate_trades(symbol: str, from_id: int):
     url = settings.ENDPOINT_BASE + 'aggTrades?symbol={}&fromId={}&limit=1000'
     url = url.format(symbol, from_id)
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=1)
     status = response.status_code
 
     if status == 200:
