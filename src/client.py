@@ -90,12 +90,12 @@ def proc(worker_idx: int, child_conn: Connection):
                 wave, symbol, from_id = msg.args
 #                print(f'w={wave}, s={symbol}, idx={from_id}')
 
-#                try:
-                result = get_aggregate_trades(symbol, from_id)
-#                except:
-#                    print(f'failed')
-#                    sleep(5)
-#                    continue
+                try:
+                    result = get_aggregate_trades(symbol, from_id)
+                except:
+                    print(f'failed')
+                    sleep(5)
+                    continue
 
                 if result.status == 200:
                     true_weight = result.used_weight
@@ -178,7 +178,7 @@ def main():
                     wave_i, true_weight, data, from_id, last_id = msg.args
                     if wave_i == wave:
                         weight_i[i] = true_weight
-#                    print(f'{i} : {wave_i}, {from_id} -> {last_id} : {true_weight}')
+                    print(f'{i} : {wave_i}, {from_id} -> {last_id} : {true_weight}')
                     busy[i] = False
                     assert buff[i] is None
 #                    assert data[0][0] == from_id
@@ -236,11 +236,11 @@ def main():
         if should_stop and not is_stopping:
             sleep(10)
             is_stopping = True
-#            print('should stop')
+            print('should stop')
             continue
 
         if is_stopping:
-            #            print('Done')
+            print('Done')
 
             c = len(tuple(filter(lambda e: e is not None, buff)))
 #            print(f'{c} left in buffer')
